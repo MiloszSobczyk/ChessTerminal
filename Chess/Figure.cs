@@ -13,8 +13,8 @@ namespace Chess
     {
         public char Symbol { get; set; }
         public int Color { get; set; } // 0 - white, 1 - black
-        protected (int, int) Position { get; set; }
-        protected List<(int, int)>? Moves;
+        protected (int row, int col) Position { get; set; }
+        public List<(int, int)>? Moves;
         protected Figure[,]? Board { get; set; }
         public override string ToString()
         {
@@ -25,15 +25,22 @@ namespace Chess
     }
     public class Pawn : Figure
     {
-        private bool MovedBy2 { get; set; }
+        
+        public bool Direction { get { return Color == 0 ? true : false; } } //Todo change color to bool
         public Pawn((int, int) pos, Figure[,] board, int color)
         {
             Symbol = 'P';
             Color = color;
             Moves = new List<(int, int)>();
-            MovedBy2 = false;
             Position = pos;
             Board = board;
+        }
+        private bool CanMoveBy2()
+        {
+            int row = Position.row;
+            int col = Position.col;
+            int direction = Color == 0 ? 1 : -1;
+            return Board[row + 2 * direction, col] == null && Board[row + direction, col] == null && row == 1 + Color * 5;
         }
         public override void FindMoves() // add checkmate detection
         {
@@ -41,7 +48,7 @@ namespace Chess
             int row = Position.Item1;
             int col = Position.Item2;
             int direction = Color == 0 ? 1 : -1;
-            if(!MovedBy2 && Board[row + 2 * direction, col] == null && Board[row + direction, col] == null && row == 1 + Color * 5) // (Color == 0 && row == 1) || (Color == 1 && row == 6)
+            if(Board[row + 2 * direction, col] == null && Board[row + direction, col] == null && row == 1 + Color * 5) // (Color == 0 && row == 1) || (Color == 1 && row == 6)
             {
                 Moves.Add((row + 2 * direction, col));
             }
@@ -77,10 +84,10 @@ namespace Chess
             if (Moves.Count > 0) return;
             int row = Position.Item1;
             int col = Position.Item2;
-            for (int i = -1; i <= 1; i += 2)
+            for (int rowDirection = -1; rowDirection <= 1; rowDirection += 2)
             {
                 int rowTemp = row;
-                while ((rowTemp += i) >= 0 && rowTemp <= 7)
+                while ((rowTemp += rowDirection) >= 0 && rowTemp <= 7)
                 {
                     if (Board[rowTemp, col] != null)
                     {
@@ -90,10 +97,10 @@ namespace Chess
                     Moves.Add((rowTemp, col));
                 }
             }
-            for (int j = -1; j <= 1; j += 2)
+            for (int colDirection = -1; colDirection <= 1; colDirection += 2)
             {
                 int colTemp = col;
-                while ((colTemp += j) >= 0 && colTemp <= 7)
+                while ((colTemp += colDirection) >= 0 && colTemp <= 7)
                 {
                     if (Board[row, colTemp] != null)
                     {
@@ -218,10 +225,10 @@ namespace Chess
             if (Moves.Count > 0) return;
             int row = Position.Item1;
             int col = Position.Item2;
-            for (int i = -1; i <= 1; i += 2)
+            for (int rowDirection = -1; rowDirection <= 1; rowDirection += 2)
             {
                 int rowTemp = row;
-                while ((rowTemp += i) >= 0 && rowTemp <= 7)
+                while ((rowTemp += rowDirection) >= 0 && rowTemp <= 7)
                 {
                     if (Board[rowTemp, col] != null)
                     {
@@ -231,10 +238,10 @@ namespace Chess
                     Moves.Add((rowTemp, col));
                 }
             }
-            for (int j = -1; j <= 1; j += 2)
+            for (int colDirection = -1; colDirection <= 1; colDirection += 2)
             {
                 int colTemp = col;
-                while ((colTemp += j) >= 0 && colTemp <= 7)
+                while ((colTemp += colDirection) >= 0 && colTemp <= 7)
                 {
                     if (Board[row, colTemp] != null)
                     {

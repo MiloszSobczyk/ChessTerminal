@@ -21,35 +21,29 @@ namespace Chess
             height = 4 * standardSize + 1;
             boardString = new char[height, width];
             CreateChessBoard();
-            CreateBoardString();
+            ModifyBoardString();
         }
         public void CreateChessBoard()
         {
-            for(int i = 0; i < 8; ++i)
+            for(int i = 0; i < standardSize; ++i)
             {
                 Board[1, i] = new Pawn((1, i), Board, 0);
-                Board[6, i] = new Pawn((1, i), Board, 1);
+                Board[standardSize - 2, i] = new Pawn((standardSize - 2, i), Board, 1);
             }
-
-            Board[0, 0] = new Rook((0, 0), Board, 0);
-            Board[0, 7] = new Rook((0, 7), Board, 0);
-            Board[0, 1] = new Knight((0, 1), Board, 0);
-            Board[0, 6] = new Knight((0, 6), Board, 0);
-            Board[0, 2] = new Bishop((0, 2), Board, 0);
-            Board[0, 5] = new Bishop((0, 5), Board, 0);
-            Board[0, 3] = new King((0, 3), Board, 0);
-            Board[0, 4] = new Queen((0, 4), Board, 0);
-
-            Board[7, 0] = new Rook((7, 0), Board, 1);
-            Board[7, 7] = new Rook((7, 7), Board, 1);
-            Board[7, 1] = new Knight((7, 1), Board, 1);
-            Board[7, 6] = new Knight((7, 6), Board, 1);
-            Board[7, 2] = new Bishop((7, 2), Board, 1);
-            Board[7, 5] = new Bishop((7, 5), Board, 1);
-            Board[7, 4] = new Queen((7, 4), Board, 1);
-            Board[7, 3] = new King((7, 3), Board, 1);
+            for (int color = 0; color <= 1; ++color)
+            {
+                int row = color * (standardSize - 1);
+                Board[row, 0] = new Rook((row, 0), Board, row);
+                Board[row, 7] = new Rook((row, 7), Board, row);
+                Board[row, 1] = new Knight((row, 1), Board, row);
+                Board[row, 6] = new Knight((row, 6), Board, row);
+                Board[row, 2] = new Bishop((row, 2), Board, row);
+                Board[row, 5] = new Bishop((row, 5), Board, row);
+                Board[row, 3] = new King((row, 3), Board, row);
+                Board[row, 4] = new Queen((row, 4), Board, row);
+            }
         }
-        public void CreateBoardString()
+        public void ModifyBoardString()
         {
             for (int i = 0; i < height; ++i)
             {
