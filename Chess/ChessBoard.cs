@@ -8,90 +8,28 @@ namespace Chess
 {
     public class ChessBoard
     {
-        public Figure[,] Board { get; set; } // change later to protected
-        char[,] boardString;
-        int standardSize;
-        int width;
-        int height;
-        public ChessBoard()
+        public int Width { get; }
+        public int Height { get; }
+        public Figure[,] Board { get; set; }
+        public ChessBoard(int width = 8, int height = 8)
         {
-            Board = new Figure[8, 8];
-            standardSize = 8;
-            width = 6 * standardSize + 1;
-            height = 4 * standardSize + 1;
-            boardString = new char[height, width];
-            CreateChessBoard();
-            ModifyBoardString();
+            Width = width;
+            Height = height;
         }
-        public void CreateChessBoard()
+        public void InitializeFigures()
         {
-            for(int i = 0; i < standardSize; ++i)
+            Board = new Figure[Width, Height];
+            string order = "RNBKQ";
+            for(int i = 0; i < Width; ++i)
             {
-                Board[1, i] = new Pawn((1, i), Board, 0);
-                Board[standardSize - 2, i] = new Pawn((standardSize - 2, i), Board, 1);
+                Board[1, i] = new Figure(FigureType.Pawn, FigureColor.White, (1, i));
+                Board[Height - 2, i] = new Figure(FigureType.Pawn, FigureColor.Black, (Height - 2, i)); 
             }
-            for (int color = 0; color <= 1; ++color)
+            for (int i = 0; i < order.Length - 2; ++i)
             {
-                int row = color * (standardSize - 1);
-                Board[row, 0] = new Rook((row, 0), Board, row);
-                Board[row, 7] = new Rook((row, 7), Board, row);
-                Board[row, 1] = new Knight((row, 1), Board, row);
-                Board[row, 6] = new Knight((row, 6), Board, row);
-                Board[row, 2] = new Bishop((row, 2), Board, row);
-                Board[row, 5] = new Bishop((row, 5), Board, row);
-                Board[row, 3] = new King((row, 3), Board, row);
-                Board[row, 4] = new Queen((row, 4), Board, row);
+                Board[0, i] = new Figure((FigureType)order[i], FigureColor.White, (0, i));
+                Board[Height - 1, i] = new Figure((FigureType)order[i], FigureColor.White, (Height - 1, i));
             }
         }
-        public void ModifyBoardString()
-        {
-            for (int i = 0; i < height; ++i)
-            {
-                for (int j = 0; j < width; ++j)
-                {
-                    boardString[i, j] = ' ';
-                }
-            }
-            for (int i = 0; i < height; ++i)
-            {
-                for (int j = 0; j <= standardSize; ++j)
-                {
-                    boardString[i, 6 * j] = '|';
-                }
-            }
-            for (int i = 0; i <= standardSize; ++i)
-            {
-                for (int j = 0; j < width; ++j)
-                {
-                    boardString[4 * i, j] = '-';
-                }
-            }
-            for (int i = 0; i < 8; ++i)
-            {
-                for (int j = 0; j < 8; ++j)
-                {
-                    if (Board[7 - i, j] != null)
-                    {
-                        boardString[4 * i + 2, 6 * j + 3] = Board[7 - i, j].Symbol;
-                    }
-                }
-            }
-        }
-        public void PrintBoard((int, int) currentPos)
-        {
-            for(int i = 0; i < height; ++i)
-            {
-                for(int j = 0; j < width; ++j)
-                {
-                    Console.Write(boardString[i, j]);
-                }
-                Console.WriteLine();
-            }
-
-        }
-        public void UpdatePositions()
-        {
-            ;
-        }
-    }
+    }   
 }
