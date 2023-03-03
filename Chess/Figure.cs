@@ -25,6 +25,7 @@ namespace Chess
     }
     public class Figure
     {
+        
         public FigureType Type { get; set; }
         public FigureColor Color { get; }
         public (int row, int col) Position { get; set; }
